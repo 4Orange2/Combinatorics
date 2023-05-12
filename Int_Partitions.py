@@ -28,7 +28,7 @@ def possible_sums(answer, var_amount, non_neg=False, less_subt=0, great_restrict
         end_list.append(list(answer))
         return end_list
     if non_neg:
-        possible_values = list(range(answer + barriers))
+        possible_values = list(range(1, answer + barriers))
         less_restrict += 1
         great_restrict -= 1
     else:
@@ -48,7 +48,7 @@ def possible_sums(answer, var_amount, non_neg=False, less_subt=0, great_restrict
                 #print(val)
             else:
                 diff = int(element[barrier_num]) - int(element[barrier_num - 1])
-                val = (diff - 1) if non_neg else diff
+                val = diff
             case.append(val)
             #print(case)
         final_val = answer - sum(case)
@@ -60,11 +60,15 @@ def possible_sums(answer, var_amount, non_neg=False, less_subt=0, great_restrict
     #math.comb(answer - 1, N - 1)
 
 def extract_range(combs, limit, less=True):
+    ''' Function shaves off all combinations that don't floow the restrictions
+    Checks to see if all elements in the given combination are under the limit
+    (in case of less=True) or over (in the case of less=False) 
+    and if so, allows the combination to pass on to the final list.'''
     extract_list = []
     for element in combs:
         all_indexes = len(element)
         append_True = 0
-        for index in range(len(element)):
+        for index in range(all_indexes):
             if less:
                 if element[index] < limit:
                     append_True += 1
@@ -84,6 +88,7 @@ print("---------------")
 print(extract_range([[0, 0, 5], [0, 1, 4], [0, 2, 3], [0, 3, 2], [0, 4, 1], [0, 5, 0], [1, 0, 4], [1, 1, 3], [1, 2, 2], [1, 3, 1], [1, 4, 0], [2, 0, 3], [2, 1, 2], [2, 2, 1], [2, 3, 0], [3, 0, 2], [3, 1, 1], [3, 2, 0], [4, 0, 1], [4, 1, 0], [5, 0, 0]], 0, less=False))
 
 def sort_list(unsorted, reverse=False, doublelayered=False):
+    '''List sorting function that I created for sorting a list which contains two or one lists embedded within.'''
     sorted_list = []
     if doublelayered:
         for element in unsorted:
@@ -125,7 +130,7 @@ def eliminate_equal(sorted_list):
                         #print(f"element to be added: {element[i - 1]}")
                         distinct.append(element[i - 1])
         else:
-            distinct.append(sorted_list[i][i])
+            distinct.append(element[i])
             # appends case with all 1's
     #print(f"distinct list: {distinct}")
     return distinct
@@ -136,6 +141,7 @@ def partitions(n, less_subt=0, great_restrict=0, summand_subt=0):
     n: the number which we want to partition
     summand_subt: n - summand_subt = summand_limit
         amount of summands is less than or equal to that value
+        meaning amount of terms that are added up
     less_subt: n - less_subt = less_restrict
         ** all summands less or equal to that value
     '''
@@ -159,6 +165,7 @@ def partitions(n, less_subt=0, great_restrict=0, summand_subt=0):
         parts.append([n])
     return parts
 
+# alternative function to len(partitions(...))
 def num_of_parts(n, less_subt=0, great_restrict=0, summand_subt=0):
     number = len(partitions(n, less_subt=less_subt, great_restrict=great_restrict, summand_subt=summand_subt))
     return number
@@ -179,7 +186,7 @@ print(len(partitions(9, less_subt=2)))
 
 # Solving the problem set:
 
-for i in range(1, 6): # Q 1
+for i in range(1, 6): # Q 1 of Mathematics of Choice by Ivan Niven
     print(len(partitions(i)))
 
 print(num_of_parts(4) - num_of_parts(4, summand_subt=2))
